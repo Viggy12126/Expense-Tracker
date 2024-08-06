@@ -1,6 +1,8 @@
 package com.example.authservice.service;
 
 import com.example.authservice.entities.UserInfo;
+import com.example.authservice.eventProducer.UserInfoEvent;
+import com.example.authservice.eventProducer.UserInfoProducer;
 import com.example.authservice.model.UserInfoDTO;
 import com.example.authservice.repository.UserRepository;
 import com.example.authservice.utils.ValidationUtil;
@@ -27,6 +29,9 @@ public class UserDetailsImpln implements UserDetailsService {
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private final UserInfoProducer userInfoProducer;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
@@ -57,7 +62,16 @@ public class UserDetailsImpln implements UserDetailsService {
             String userId = UUID.randomUUID().toString();
             userRepository.save(new UserInfo(userId, userInfoDto.getUsername(), userInfoDto.getPassword(), new HashSet<>()));
 //            System.out.println("userid is"+" " + userId);
+        userInfoProducer.sendEventToKafka(userInfoEventToPublish(userInfoDto, userId));
             return true;
 
+    }
+    private UserInfoEvent userInfoEventToPublish(UserInfoDTO userInfoDto, String userId){
+        return UserInfoEvent.builder()
+                .userId(userId)
+                .firstName(userInfoDto.getUsername())
+                .lastName(userInfoDto.getLastName())
+                .email(userInfoDto.getEmail())
+                .phoneNumber(userInfoDto.getPhoneNumber()).build();
     }
 }

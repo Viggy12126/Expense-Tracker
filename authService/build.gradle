@@ -37,6 +37,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.modelmapper:modelmapper:3.2.0'
 	implementation group:'mysql', name:'mysql-connector-java', version:'8.0.33'
+	implementation 'org.springframework.kafka:spring-kafka'
 	compileOnly group:'org.projectlombok', name:'lombok', version:"$lombokVersion"
 	annotationProcessor  group:'org.projectlombok', name:'lombok', version:"$lombokVersion"
 	testImplementation group:'org.projectlombok', name:'lombok', version:"$lombokVersion"
