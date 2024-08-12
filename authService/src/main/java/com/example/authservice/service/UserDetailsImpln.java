@@ -66,6 +66,7 @@ public class UserDetailsImpln implements UserDetailsService {
             return true;
 
     }
+
     private UserInfoEvent userInfoEventToPublish(UserInfoDTO userInfoDto, String userId){
         return UserInfoEvent.builder()
                 .userId(userId)
